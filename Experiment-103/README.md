@@ -12,9 +12,10 @@ To implement a multi-threaded state machine using condition variables and study 
 
 ## Problem Statement  
 
-In the `proc_thread` project, the file `condvar.c` is provided.
+In this project, the file `condvar.c` is provided.
 
 Students must modify this program to implement a **four-state state machine** with the following requirements:
+<img width="228" height="180" alt="Screenshot 2026-01-26 at 00 20 22" src="https://github.com/user-attachments/assets/565dfbcb-c4eb-4643-8084-753a873192ed" />
 
 - Four threads must be created, each responsible for handling one state.
 - Only **one condition variable** must be used for synchronization.
@@ -49,7 +50,6 @@ The program should exhibit orderly transitions among four states, controlled by 
 Each thread must execute only when its corresponding state becomes active, demonstrating proper condition-variable-based synchronization.
 
 ---
-<img width="228" height="180" alt="Screenshot 2026-01-26 at 00 20 22" src="https://github.com/user-attachments/assets/565dfbcb-c4eb-4643-8084-753a873192ed" />
 
 
 
