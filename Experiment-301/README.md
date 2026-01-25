@@ -1,4 +1,4 @@
-# EXPERIMENT 02
+# EXPERIMENT 301
 
 ## Experiment Title  
 **Implementation of Basic Send–Receive–Reply IPC Mechanism in QNX**
