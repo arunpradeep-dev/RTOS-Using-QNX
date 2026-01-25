@@ -1,48 +1,49 @@
-# EXPERIMENT 02
+# EXPERIMENT-101
 
 ## Experiment Title  
-**Implementation of Basic Send–Receive–Reply IPC Mechanism in QNX**
+**Process Creation Using fork() and Parent–Child Execution in QNX**
 
 ---
 
 ## Objective  
-To implement and test inter-process communication using QNX message passing by completing a checksum server and client program that exchange data using Send, Receive, and Reply primitives.
+To create multiple child processes using the `fork()` system call, observe different execution paths in parent and child processes, terminate the parent after a fixed time interval, and print the child process ID after the parent exits.
 
 ---
 
 ## Problem Statement  
 
-In the given IPC project, two source files are provided:
+Write a C program that creates multiple child processes using the `fork()` system call.
 
-- `server.c`
-- `client.c`
+The program must satisfy the following requirements:
 
-The server functions as a **checksum server** with the following operation:
+- The parent process should create more than one child process.
+- The parent and child processes must print different identifying messages.
+- The parent process must terminate after **5 seconds**.
+- Each child process must continue executing and print its **process ID (PID)** after the parent exits.
 
-- The client sends a string to the server.  
-- The server receives the message.  
-- The server computes a checksum for the received string.  
-- The server replies to the client with the calculated checksum.
-
-Both the client and server programs are incomplete. Students must carefully trace through the source code and identify comments that indicate where the required logic must be implemented.
+This experiment demonstrates UNIX/QNX process creation semantics and independent execution of parent and child processes.
 
 ---
 
 ## Tasks to be Performed  
 
-1. Examine `server.c` and `client.c` and locate the sections marked with comments where code must be added.  
-2. Complete the missing portions of both programs.  
-3. Compile the client and server applications.  
-4. Execute the server program and record its **Process ID (PID)** and **Channel ID (CHID)**.  
-5. Run the client program using the recorded PID and CHID along with a user-defined text string as command-line arguments.  
-6. Observe the output displayed by both the client and the server.  
-7. Verify that the checksum sent by the server matches the input string.
+1. Write a C program that uses the `fork()` system call to create multiple child processes.  
+2. Include different print statements in the parent and child code paths.  
+3. Introduce a delay mechanism so that the parent terminates after 5 seconds.  
+4. Ensure that the child processes remain alive after the parent exits.  
+5. Print the PID of each child process after the parent terminates.  
+6. Compile the program using the QNX compiler toolchain.  
+7. Execute the program and observe the output.  
+8. Record the order of messages printed by the parent and child processes.  
+9. Verify that the child processes continue running independently of the parent.
 
 ---
 
 ## Expected Outcome  
 
-The client should successfully send a string to the server, and the server should return the correct checksum value. Proper IPC communication using Send–Receive–Reply primitives must be demonstrated.
+- The parent process should create multiple children and print its execution messages.  
+- After five seconds, the parent process should terminate.  
+- The child processes should continue executing and display their respective PIDs.  
+- The output must clearly distinguish between parent and child execution flows.
 
 ---
-
