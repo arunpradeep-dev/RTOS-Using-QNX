@@ -49,3 +49,7 @@ The program should exhibit orderly transitions among four states, controlled by 
 Each thread must execute only when its corresponding state becomes active, demonstrating proper condition-variable-based synchronization.
 
 ---
+<img width="228" height="180" alt="Screenshot 2026-01-26 at 00 20 22" src="https://github.com/user-attachments/assets/565dfbcb-c4eb-4643-8084-753a873192ed" />
+
+
+
