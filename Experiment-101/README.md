@@ -1,49 +1,56 @@
-# EXPERIMENT-201
+# EXPERIMENT-101
 
 ## Experiment Title  
-**Process Creation Using fork() and Parent–Child Execution in QNX**
+**Hello World Application on QNX: VMware Virtual Machine and Raspberry Pi**
 
 ---
 
 ## Objective  
-To create multiple child processes using the `fork()` system call, observe different execution paths in parent and child processes, terminate the parent after a fixed time interval, and print the child process ID after the parent exits.
+To create, build, and execute a simple “Hello World” program in QNX on two targets:  
+1) QNX running inside a VMware virtual machine  
+2) QNX running on Raspberry Pi hardware
 
 ---
 
-## Problem Statement  
+## Hardware Requirements  
 
-Write a C program that creates multiple child processes using the `fork()` system call.
+### For VMware Setup
+- Host PC / Laptop (Intel/AMD processor)
+- Minimum 8 GB RAM recommended
+- Ethernet or Wi-Fi network interface
+- VMware Workstation / VMware Player
+- QNX Neutrino image configured for x86_64 virtual machine
 
-The program must satisfy the following requirements:
-
-- The parent process should create more than one child process.
-- The parent and child processes must print different identifying messages.
-- The parent process must terminate after **5 seconds**.
-- Each child process must continue executing and print its **process ID (PID)** after the parent exits.
-
-This experiment demonstrates UNIX/QNX process creation semantics and independent execution of parent and child processes.
-
----
-
-## Tasks to be Performed  
-
-1. Write a C program that uses the `fork()` system call to create multiple child processes.  
-2. Include different print statements in the parent and child code paths.  
-3. Introduce a delay mechanism so that the parent terminates after 5 seconds.  
-4. Ensure that the child processes remain alive after the parent exits.  
-5. Print the PID of each child process after the parent terminates.  
-6. Compile the program using the QNX compiler toolchain.  
-7. Execute the program and observe the output.  
-8. Record the order of messages printed by the parent and child processes.  
-9. Verify that the child processes continue running independently of the parent.
+### For Raspberry Pi Setup
+- Raspberry Pi board (Model 3 / 4 recommended)
+- MicroSD card with QNX image flashed
+- Power adapter for Raspberry Pi
+- HDMI monitor and cable
+- USB keyboard and mouse
+- Ethernet cable or Wi-Fi connection
+- Host PC running QNX Momentics IDE
 
 ---
 
-## Expected Outcome  
+## Software / Tools Required  
 
-- The parent process should create multiple children and print its execution messages.  
-- After five seconds, the parent process should terminate.  
-- The child processes should continue executing and display their respective PIDs.  
-- The output must clearly distinguish between parent and child execution flows.
+- QNX Momentics IDE (installed on host machine)
+- QNX Neutrino RTOS images for:
+  - VMware VM
+  - Raspberry Pi
+- QNX cross-compiler toolchain (`qcc`)
+- Target connection through:
+  - Network (preferred) **or**
+  - Serial console
 
 ---
+
+## Program (hello.c)
+
+```c
+#include <stdio.h>
+
+int main(void) {
+    printf("Hello, World from QNX!\n");
+    return 0;
+}
