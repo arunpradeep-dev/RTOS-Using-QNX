@@ -47,3 +47,15 @@ This experiment demonstrates UNIX/QNX process creation semantics and independent
 - The output must clearly distinguish between parent and child execution flows.
 
 ---
+
+## Program
+
+---
+
+## Output
+
+---
+
+## Result
+
+---
