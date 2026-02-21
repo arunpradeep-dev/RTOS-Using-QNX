@@ -28,19 +28,18 @@ This exercise emphasizes controlled thread execution using condition variables r
 ---
 
 ## Tasks to be Performed  
-
-1. Navigate to the `proc_thread` project directory.  
-2. Open the file `condvar.c`.  
-3. Study the existing thread structure and synchronization logic.  
-4. Design a four-state state machine model.  
-5. Modify the program to create four threads, each assigned to one state.  
-6. Introduce a single condition variable for synchronization.  
-7. Implement a shared state variable and counter.  
-8. Ensure that only the thread corresponding to the active state proceeds.  
-9. Implement transitions from State 1 to State 2 or State 3 based on the counter value.  
-10. Rebuild and run the modified program.  
-11. Observe and record the order of execution and state transitions.  
-12. Verify that busy waiting is avoided and threads block correctly on the condition variable.
+ 
+1. Open the file `condvar.c`.  
+2. Study the existing thread structure and synchronization logic.  
+3. Design a four-state state machine model.  
+4. Modify the program to create four threads, each assigned to one state.  
+5. Introduce a single condition variable for synchronization.  
+6. Implement a shared state variable and counter.  
+7. Ensure that only the thread corresponding to the active state proceeds.  
+8. Implement transitions from State 1 to State 2 or State 3 based on the counter value.  
+9. Rebuild and run the modified program.  
+10. Observe and record the order of execution and state transitions.  
+11. Verify that busy waiting is avoided and threads block correctly on the condition variable.
 
 ---
 
@@ -50,6 +49,12 @@ The program should exhibit orderly transitions among four states, controlled by 
 Each thread must execute only when its corresponding state becomes active, demonstrating proper condition-variable-based synchronization.
 
 ---
+
+## Program
+
+---
+
+## Output
 
 
 
