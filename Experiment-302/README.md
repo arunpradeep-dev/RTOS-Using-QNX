@@ -47,24 +47,19 @@ Complete these programs so that:
 
 ---
 
-## Build Steps
+## Build/Run/Test Steps
 
 1. Open a new project `ipc` in Momentics.
 2. Ensure both source files `event_server.c`,`event_client.c` along with the header file `event_server.h` are included in the project build.
 3. Build the project
 4. Confirm there are no compilation errors.
-
----
-
-## Verification Checklist
-
-- Every second:
+5. Every second:
   - `event_server` prints that it **sent a pulse**
   - `event_client` prints that it **received a pulse**
-- Terminate the client and restart it:
+6. Terminate the client and restart it:
   - Kill/stop `event_client`
   - Run `event_client` again
-- Observe correct re-registration and continued pulse delivery.
+7. Observe correct re-registration and continued pulse delivery.
 
 ---
 
