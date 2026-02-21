@@ -54,3 +54,7 @@ int main(void) {
     printf("Hello, World from QNX!\n");
     return 0;
 }
+```
+## Output
+
+## Result
