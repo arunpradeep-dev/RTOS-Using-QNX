@@ -28,7 +28,7 @@ Complete these programs so that:
 
 ---
 
-## Tasks to be Performed  
+## Tasks to be Performed/Algorithm  
 
 ### Part A – Modify `event_client.c`
 1. Open `event_client.c` in Momentics.
