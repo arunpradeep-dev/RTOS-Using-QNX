@@ -24,7 +24,7 @@ The server functions as a **checksum server** with the following operation:
 - The server computes a checksum for the received string.  
 - The server replies to the client with the calculated checksum.
 
-Both the client and server programs are incomplete. Students must carefully trace through the source code and identify comments that indicate where the required logic must be implemented.
+Both the client and server programs are incomplete. You must carefully trace through the source code and identify comments that indicate where the required logic must be implemented.
 
 ---
 
