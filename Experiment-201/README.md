@@ -5,7 +5,7 @@
 
 ---
 
-## Objective  
+## Aim/Objective  
 To create multiple child processes using the `fork()` system call, observe different execution paths in parent and child processes, terminate the parent after a fixed time interval, and print the child process ID after the parent exits.
 
 ---
