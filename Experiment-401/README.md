@@ -12,9 +12,9 @@ To implement basic interrupt handling in QNX by attaching an interrupt service t
 
 ## Problem Statement  
 
-In the `interrupt` project, a skeleton source file named `intsimple.c` is provided.
+In this project, a skeleton source file named `intsimple.c` is provided.
 
-Students must complete the program to handle hardware interrupts. The instructor will specify the interrupt number (IRQ) to attach to.
+Learners must complete the program to handle hardware interrupts. The instructor will specify the interrupt number (IRQ) to attach to.
 
 The completed program must:
 
