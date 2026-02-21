@@ -25,7 +25,7 @@ This experiment demonstrates UNIX/QNX process creation semantics and independent
 
 ---
 
-## Tasks to be Performed  
+## Tasks to be Performed/Algorithm  
 
 1. Write a C program that uses the `fork()` system call to create multiple child processes.  
 2. Include different print statements in the parent and child code paths.  
@@ -39,7 +39,7 @@ This experiment demonstrates UNIX/QNX process creation semantics and independent
 
 ---
 
-## Expected Outcome  
+## Expected Outcome/Sample Output  
 
 - The parent process should create multiple children and print its execution messages.  
 - After five seconds, the parent process should terminate.  
