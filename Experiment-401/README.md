@@ -40,13 +40,6 @@ The completed program must:
 
 ---
 
-## Build Steps (Momentics IDE)
-
-1. **Project → Build Project** (or Hammer icon).  
-2. Confirm successful build with no errors.
-
----
-
 ## Run / Test Steps (Momentics IDE)
 
 1. Right-click the application binary → **Run As → QNX C/C++ Application**.  
@@ -64,3 +57,16 @@ The completed program must:
 - `InterruptWait()` unblocks on each interrupt and the program prints confirmation.  
 
 ---
+
+## Program
+
+---
+
+## Output
+
+---
+
+## Result
+
+---
+
