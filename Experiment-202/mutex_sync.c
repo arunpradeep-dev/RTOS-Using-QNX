@@ -1,7 +1,7 @@
 /*
  *  mutex_sync.c
  *
- *  This code is the same as nomutex.c.
+ *  This code is the fixed version of nomutex.c.
  *
  *  The exercise is to use the mutex construct that we learned
  *  about to modify the source to prevent our access problem.
@@ -43,6 +43,7 @@
 
 volatile unsigned var1;
 volatile unsigned var2;
+pthread_mutex_t var_mutex;
 
 void *update_thread(void *);
 
@@ -60,6 +61,13 @@ int main()
 	var1 = var2 = 0; /* initialize to known values */
 
 	printf("mutex_sync:  starting; creating threads\n");
+
+	ret = pthread_mutex_init(&var_mutex, NULL );
+	if ( ret != EOK )
+	{
+		fprintf(stderr, "pthread_mutex_init failed: %s\n", strerror(ret));
+		exit(EXIT_FAILURE);
+	}
 
 	/*
 	 *  we want to create the new threads using Round Robin
@@ -159,34 +167,74 @@ int main()
 
 void do_work()
 {
-	static volatile unsigned var3;
+	static volatile unsigned var3 = 1;
 
-	var3++;
 	/* For faster/slower processors, may need to tune this program by
 	 * modifying the frequency of this printf -- add/remove a 0
 	 */
-	if (!(var3 % 10000000))
+	// var3++;
+	// note there is a synchronisation problem with var3 here as well -- it could
+	// result in this "did some work" printf never happening.  It, too, could be solved
+	// with a mutex -- but that is a bit heavy.  atomic_add_value() is a better choice.
+	//
+	if (!(atomic_add_value(&var3, 1) % 10000000))
 		printf("thread %d did some work\n", pthread_self());
 }
 
 void *
 update_thread(void *i)
 {
+	int ret;
 	while (!done)
 	{
+		ret = pthread_mutex_lock(&var_mutex);
+		if (EOK != ret)
+		{
+			fprintf(stderr, " pthread_mutex_lock failed: %s\n", strerror(ret));
+			exit(EXIT_FAILURE);
+		}
 		if (var1 != var2)
 		{
-			printf("thread %d, var1 (%u) is not equal to var2 (%u)!\n", pthread_self(), var1, var2);
+			unsigned lvar1, lvar2;
+			lvar1 = var1;
+			lvar2 = var2;
 			var1 = var2;
-		}
+			ret = pthread_mutex_unlock(&var_mutex);
+			if (EOK != ret)
+			{
+				fprintf(stderr, "pthread_mutex_unlock failed: %s\n", strerror(ret));
+				exit(EXIT_FAILURE);
+			}
+			printf("thread %d, var1 (%u) is not equal to var2 (%u)!\n", pthread_self(), lvar1, lvar2);
 
+		}
+		else{
+			ret = pthread_mutex_unlock(&var_mutex);
+			if (EOK != ret)
+			{
+				fprintf(stderr, "pthread_mutex_unlock failed: %s\n", strerror(ret));
+				exit(EXIT_FAILURE);
+			}
+		}
 		/* do some work here */
 		do_work();
 
+		ret = pthread_mutex_lock(&var_mutex);
+		if (EOK != ret)
+		{
+			fprintf(stderr, "pthread_mutex_lock failed: %s\n", strerror(ret));
+			exit(EXIT_FAILURE);
+		}
 		var1 += 2;
 		var1--;
 		var2 += 2;
 		var2--;
+		ret = pthread_mutex_unlock(&var_mutex);
+		if (EOK != ret)
+		{
+			fprintf(stderr, "pthread_mutex_unlock failed: %s\n", strerror(ret));
+			exit(EXIT_FAILURE);
+		}
 	}
 	return (NULL);
 }
