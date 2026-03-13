@@ -1,77 +1,107 @@
-# EXPERIMENT 203
+# Experiment: Condition Variables and State Machine using Threads
 
-## Experiment Title  
-**Thread Coordination Using Condition Variables in QNX**
+## Aim
 
----
-
-## Objective  
-To implement a multi-threaded state machine using condition variables and study coordinated execution among threads in a QNX environment.
+To implement a **multi-state machine using POSIX threads and condition variables** in QNX, where multiple threads synchronize using a shared state variable.
 
 ---
 
-## Problem Statement  
+## Objective
 
-In this project, the file `condvar.c` is provided.
-
-Students must modify this program to implement a **four-state state machine** with the following requirements:
-<img width="228" height="180" alt="Screenshot 2026-01-26 at 00 20 22" src="https://github.com/user-attachments/assets/565dfbcb-c4eb-4643-8084-753a873192ed" />
-
-- Four threads must be created, each responsible for handling one state.
-- Only **one condition variable** must be used for synchronization.
-- State 1 must maintain a counter.
-- Based on the counter value, State 1 should transition control to State 2 or State 3.
-- The remaining states must complete the cycle and return control appropriately.
-
-This exercise emphasizes controlled thread execution using condition variables rather than busy waiting.
+* To understand **thread synchronization using mutex and condition variables**.
+* To implement a **state machine with four states (0, 1, 2, 3)**.
+* To demonstrate **state transitions controlled by multiple threads**.
 
 ---
 
-## Tasks to be Performed  
- 
-1. Open the file `condvar.c`.  
-2. Study the existing thread structure and synchronization logic.  
-3. Design a four-state state machine model.  
-4. Modify the program to create four threads, each assigned to one state.  
-5. Introduce a single condition variable for synchronization.  
-6. Implement a shared state variable and counter.  
-7. Ensure that only the thread corresponding to the active state proceeds.  
-8. Implement transitions from State 1 to State 2 or State 3 based on the counter value.  
-9. Rebuild and run the modified program.  
-10. Observe and record the order of execution and state transitions.  
-11. Verify that busy waiting is avoided and threads block correctly on the condition variable.
+## Problem Statement
+
+Design a multithreaded program where **four threads represent four states of a state machine**.
+All threads share a **common state variable, mutex, and condition variable**.
+
+The system should follow the transitions:
+
+```
+State 0 → State 1
+State 1 → State 2 (if internal variable is even)
+State 1 → State 3 (if internal variable is odd)
+State 2 → State 0
+State 3 → State 0
+```
+
+Each state is handled by a **separate thread**, and threads synchronize using **mutex locks and condition variables**.
 
 ---
-#### condvar.c
+
+# Algorithm
+
+1. Start the program.
+2. Declare a **global state variable** initialized to **0**.
+3. Declare a **mutex and condition variable** for synchronization.
+4. Initialize the mutex and condition variable.
+5. Create **four threads**, each representing a state:
+
+   * Thread for **State 0**
+   * Thread for **State 1**
+   * Thread for **State 2**
+   * Thread for **State 3**
+6. Each thread runs continuously in a loop.
+
+### State 0 Thread
+
+7. Lock the mutex.
+8. Wait until the shared state becomes **0**.
+9. Print **"transit 0 → 1"**.
+10. Change the state to **1**.
+11. Broadcast the condition variable to wake other threads.
+12. Unlock the mutex.
+13. Delay briefly.
+
+### State 1 Thread
+
+14. Lock the mutex.
+15. Wait until the state becomes **1**.
+16. Increment internal variable `i`.
+17. If `i` is **odd**, set state to **3**.
+18. If `i` is **even**, set state to **2**.
+19. Print **"transit 1 → state"**.
+20. Broadcast the condition variable.
+21. Unlock the mutex.
+
+### State 2 Thread
+
+22. Lock the mutex.
+23. Wait until the state becomes **2**.
+24. Print **"transit 2 → 0"**.
+25. Set the state to **0**.
+26. Broadcast the condition variable.
+27. Unlock the mutex.
+
+### State 3 Thread
+
+28. Lock the mutex.
+
+29. Wait until the state becomes **3**.
+
+30. Print **"transit 3 → 0"**.
+
+31. Set the state to **0**.
+
+32. Broadcast the condition variable.
+
+33. Unlock the mutex.
+
+34. Allow the threads to run for a fixed duration.
+
+35. Exit the program.
+
+---
+
+# Program
+
 ```c
 /*
- *  condvar.c
- *
- *  Objectives:
- *
- *      condvar.c is currently a two-state example.  The producer (or
- *      state 0) did something which caused the consumer (or
- *      state 1) to run.  State 1 did something which caused
- *      a return to state 0.  Each thread implemented one of
- *      the states.
- *
- *      This example will have 4 states in its state machine 
- *      with the following state transitions:
- *
- *        State 0 -> State 1
- *        State 1 -> State 2 if state 1's internal variable indicates "even"
- *        State 1 -> State 3 if state 1's internal variable indicates "odd"
- *        State 2 -> State 0
- *        State 3 -> State 0
- *    
- *      And, of course, one thread implementing each state, sharing the
- *      same state variable and condition variable for notification of
- *      change in the state variable.
- *
- *      Note: Error checking has been left out in much of this example
- *      to increase readability.  Production code should not leave out
- *      this error checking.
- *
+ * condvar.c
  */
 
 #include <stdio.h>
@@ -83,114 +113,141 @@ This exercise emphasizes controlled thread execution using condition variables r
 #include <string.h>
 #include <stdlib.h>
 
-/*
- *  our global variables.
- */
-
-volatile int state; // which state we are in
-
-/*
- *  our mutex and condition variable
- */
+volatile int state;
 
 pthread_mutex_t mutex;
 pthread_cond_t cond;
 
 void *state_0(void *);
 void *state_1(void *);
+void *state_2(void *);
+void *state_3(void *);
 
 int main()
 {
-	int ret;
+    int ret;
 
-	ret = pthread_mutex_init(&mutex, NULL );
-	if (ret != EOK)
-	{
-		fprintf(stderr, "pthread_mutex_init failed: %s\n", strerror(ret));
-		exit(EXIT_FAILURE);
-	}
+    ret = pthread_mutex_init(&mutex, NULL);
+    if (ret != EOK) {
+        fprintf(stderr,"pthread_mutex_init failed: %s\n", strerror(ret));
+        exit(EXIT_FAILURE);
+    }
 
-	ret = pthread_cond_init(&cond, NULL );
-	if (ret != EOK)
-	{
-		fprintf(stderr, "pthread_cond_init failed: %s\n", strerror(ret));
-		exit(EXIT_FAILURE);
-	}
+    ret = pthread_cond_init(&cond, NULL);
+    if (ret != EOK) {
+        fprintf(stderr,"pthread_cond_init failed: %s\n", strerror(ret));
+        exit(EXIT_FAILURE);
+    }
 
-	state = 0;
+    state = 0;
 
-	pthread_create(NULL, NULL, state_1, NULL);
-	pthread_create(NULL, NULL, state_0, NULL);
+    pthread_create(NULL,NULL,state_1,NULL);
+    pthread_create(NULL,NULL,state_0,NULL);
+    pthread_create(NULL,NULL,state_2,NULL);
+    pthread_create(NULL,NULL,state_3,NULL);
 
-	sleep(20); // let the threads run
-	printf("main, exiting\n");
-	return 0;
+    sleep(20);
+    printf("main, exiting\n");
+    return 0;
 }
 
-/*
- *  state 0 handler (was producer)
- */
-
-void *
-state_0(void *arg)
+void *state_0(void *arg)
 {
-	while (1)
-	{
-		pthread_mutex_lock(&mutex);
-		while (state != 0)
-		{
-			pthread_cond_wait(&cond, &mutex);
-		}
-		printf("transit 0 -> 1\n");
-		state = 1;
-		pthread_cond_signal(&cond);
-		pthread_mutex_unlock(&mutex);
-		/* don't chew all the CPU time */
-		delay(100);
-	}
-	return (NULL);
+    while(1)
+    {
+        pthread_mutex_lock(&mutex);
+        while(state != 0)
+            pthread_cond_wait(&cond,&mutex);
+
+        printf("transit 0 -> 1\n");
+        state = 1;
+
+        pthread_cond_broadcast(&cond);
+        pthread_mutex_unlock(&mutex);
+        delay(100);
+    }
 }
 
-/*
- *  state 1 handler (was consumer)
- */
-
-void *
-state_1(void *arg)
+void *state_1(void *arg)
 {
-	while (1)
-	{
-		pthread_mutex_lock(&mutex);
-		while (state != 1)
-		{
-			pthread_cond_wait(&cond, &mutex);
-		}
-		printf("transit 1 -> 0\n");
-		state = 0;
-		pthread_cond_signal(&cond);
-		pthread_mutex_unlock(&mutex);
-	}
-	return (NULL);
+    int i = 1;
+
+    while(1)
+    {
+        pthread_mutex_lock(&mutex);
+        while(state != 1)
+            pthread_cond_wait(&cond,&mutex);
+
+        if(++i & 0x1)
+            state = 3;
+        else
+            state = 2;
+
+        printf("transit 1 -> %d\n",state);
+
+        pthread_cond_broadcast(&cond);
+        pthread_mutex_unlock(&mutex);
+    }
 }
+
+void *state_2(void *arg)
+{
+    while(1)
+    {
+        pthread_mutex_lock(&mutex);
+        while(state != 2)
+            pthread_cond_wait(&cond,&mutex);
+
+        printf("transit 2 -> 0\n");
+        state = 0;
+
+        pthread_cond_broadcast(&cond);
+        pthread_mutex_unlock(&mutex);
+    }
+}
+
+void *state_3(void *arg)
+{
+    while(1)
+    {
+        pthread_mutex_lock(&mutex);
+        while(state != 3)
+            pthread_cond_wait(&cond,&mutex);
+
+        printf("transit 3 -> 0\n");
+        state = 0;
+
+        pthread_cond_broadcast(&cond);
+        pthread_mutex_unlock(&mutex);
+    }
+}
+```
+
+---
+
+# Expected Output
 
 ```
+transit 0 -> 1
+transit 1 -> 2
+transit 2 -> 0
+transit 0 -> 1
+transit 1 -> 3
+transit 3 -> 0
+transit 0 -> 1
+transit 1 -> 2
+transit 2 -> 0
+transit 0 -> 1
+transit 1 -> 3
+transit 3 -> 0
+...
+main, exiting
+```
+
+*(The sequence alternates between state 2 and state 3 depending on whether the counter is even or odd.)*
+
 ---
-## Expected Outcome  
 
-The program should exhibit orderly transitions among four states, controlled by a single condition variable and a shared counter.  
-Each thread must execute only when its corresponding state becomes active, demonstrating proper condition-variable-based synchronization.
+# Result
 
----
-
-## Program
-
----
-
-## Output
-
----
-
-## Result
-
----
-
+Thus, a **multi-state machine using POSIX threads, mutex, and condition variables** was successfully implemented and the **state transitions were executed correctly**.
