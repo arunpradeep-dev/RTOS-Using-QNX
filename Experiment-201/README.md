@@ -126,7 +126,7 @@ Child 3 running after parent exit. My PID = 1203, New Parent PID = 1
 
 # Ouput
 
----
+c:\Users\acer\OneDrive\Documents\GitHub\RTOS-Using-QNX\Experiment-201\2011.png
 
 # Result
 
